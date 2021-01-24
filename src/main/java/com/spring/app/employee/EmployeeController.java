@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -17,7 +18,7 @@ public class EmployeeController {
 	private EmployeeService employeeService;
 	
 	@RequestMapping("/employees")
-	public List<Employee> getAllEmployees() {
+	public @ResponseBody List<Employee> getAllEmployees() {
 		return employeeService.getAllEmplloyees();
 	}
 	
