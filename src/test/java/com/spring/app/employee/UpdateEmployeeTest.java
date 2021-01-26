@@ -1,9 +1,6 @@
 package com.spring.app.employee;
 
-import static com.spring.app.employee.utils.Constants.EMPLOYEE_NOT_FOUND;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
@@ -14,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.spring.app.employee.exceptions.BusinessException;
 import com.spring.app.employee.pojos.Employee;
 import com.spring.app.employee.pojos.requests.EmployeeRequest;
 import com.spring.app.employee.pojos.responses.ApiResponse;

@@ -1,7 +1,5 @@
 package com.spring.app.employee.controller;
 
-import java.util.List;
-
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,8 +21,9 @@ import com.spring.app.employee.pojos.Employee;
 import com.spring.app.employee.pojos.Task;
 import com.spring.app.employee.pojos.requests.EmployeeRequest;
 import com.spring.app.employee.pojos.responses.ApiResponse;
+import com.spring.app.employee.pojos.responses.PageResponse;
 import com.spring.app.employee.services.EmployeeService;
-import com.spring.app.employee.services.FileStorageService;
+import com.spring.app.employee.services.FileUploadService;
 import com.spring.app.employee.services.TaskProcessingService;
 
 import static com.spring.app.employee.utils.Constants.*;
@@ -36,15 +35,15 @@ public class EmployeeController {
 	private EmployeeService employeeService;
 	
 	@Autowired
-	private FileStorageService fileStorageService;
+	private FileUploadService fileUploadService;
 	
 	@Autowired
 	private TaskProcessingService taskProcessingService;
 	
 	@GetMapping("/employees")
-	public ResponseEntity<ApiResponse> getAllEmployees(Pageable pageable) {
+	public ResponseEntity<PageResponse<Employee>> getAllEmployees(Pageable pageable) {
 		Page<Employee> employees = employeeService.getAllEmplloyees(pageable);
-		ApiResponse response = new ApiResponse(SUCCESS, employees);
+		PageResponse<Employee> response = new PageResponse<Employee>(SUCCESS, employees);
 		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
 	
@@ -76,9 +75,9 @@ public class EmployeeController {
 		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
 	
-	@PostMapping("/employees/upload")
-	public ResponseEntity<ApiResponse> handleFileUpload(@RequestParam("file") MultipartFile file) throws BusinessException, InterruptedException {
-		Task task = fileStorageService.store(file);
+	@PostMapping("/employees")
+	public ResponseEntity<ApiResponse> handleFileUpload(@RequestParam("file") MultipartFile file, @RequestParam String action) throws BusinessException, InterruptedException {
+		Task task = fileUploadService.store(action, file);
 		ApiResponse response = new ApiResponse(SUCCESS, task);
 		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}

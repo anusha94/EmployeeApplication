@@ -20,7 +20,6 @@ public class EmployeeService {
 	
 	public Page<Employee> getAllEmplloyees(Pageable pageable) {
         Page<Employee> employees = employeeRepository.findAll(pageable);
-
         return employees;
 	}
 	

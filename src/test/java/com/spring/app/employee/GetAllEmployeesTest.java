@@ -8,12 +8,15 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.spring.app.employee.controller.EmployeeController;
 import com.spring.app.employee.pojos.Employee;
-import com.spring.app.employee.pojos.responses.ApiResponse;
+import com.spring.app.employee.pojos.responses.PageResponse;
 import com.spring.app.employee.utils.TestUtil;
 
 @RunWith(SpringRunner.class)
@@ -26,10 +29,14 @@ public class GetAllEmployeesTest {
 	private TestRestTemplate restTemplate;
 	
 	@Autowired
+	private EmployeeController employeeController;
+	
+	@Autowired
 	private TestUtil testUtil;
 	
-	private ApiResponse getApiResponse() {
-		ResponseEntity<ApiResponse> responseEntity = this.restTemplate.getForEntity(API_URL, ApiResponse.class);
+	private PageResponse<Employee> getPageResponse() {
+		Pageable page = PageRequest.of(0, 5);
+		ResponseEntity<PageResponse<Employee>> responseEntity = this.employeeController.getAllEmployees(page);
 		return responseEntity.getBody();
 	}
 
@@ -39,22 +46,16 @@ public class GetAllEmployeesTest {
 	}
 	
 	@Test
-	public void testEmptyResponse() {
-		ApiResponse response = this.getApiResponse();
-		
-		ObjectMapper mapper = new ObjectMapper();
-		Employee[] employees =  mapper.convertValue(response.getResult(), Employee[].class);
-		
-		assertEquals(0, employees.length);
+	public void testEmptyResponse() throws JsonProcessingException {
+		PageResponse<Employee> response = this.getPageResponse();
+		assertEquals(0, response.getResult().getTotalElements());
 	}
 	
 	@Test
 	public void testEmployeeResponse() {
 		this.testUtil.addEmployees();
-		ApiResponse response = this.getApiResponse();
-		ObjectMapper mapper = new ObjectMapper();
-		Employee[] employees =  mapper.convertValue(response.getResult(), Employee[].class);
-		assertEquals(5, employees.length);
+		PageResponse<Employee> response = this.getPageResponse();
+		assertEquals(5, response.getResult().getTotalElements());
 	}
 	
 }

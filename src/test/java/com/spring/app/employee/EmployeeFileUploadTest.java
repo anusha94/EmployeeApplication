@@ -41,7 +41,7 @@ private final String API_URL = "/employees/upload";
 	    MockMultipartFile file 
 	      = new MockMultipartFile(
 	        "file", 
-	        "hello.txt", 
+	        "test.txt", 
 	        MediaType.TEXT_PLAIN_VALUE, 
 	        "Anusha 26\n Akash 27".getBytes()
 	      );

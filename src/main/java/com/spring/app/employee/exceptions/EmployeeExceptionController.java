@@ -23,7 +23,6 @@ public class EmployeeExceptionController extends ResponseEntityExceptionHandler{
 	
 	@ExceptionHandler(BusinessException.class)
 	public ResponseEntity<Object> handleBusinessException(BusinessException ex) {
-		ex.printStackTrace();
 		log.error("Handle Business Exception - ", ex.getMessage());
 		ApiResponse response = new ApiResponse(FAILURE, ex.getCode(), ex.getMessage());
 		return new ResponseEntity<Object>(response, HttpStatus.BAD_REQUEST);
