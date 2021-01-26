@@ -25,4 +25,6 @@ public class Constants {
 	// Task constants
 	public static final String PROCESSING = "processing";
 	public static final String COMPLETED = "completed";
+	
+	public static final String FILE_UPLOAD_DELIMITER = " ";
 }
