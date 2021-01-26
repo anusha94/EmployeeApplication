@@ -58,7 +58,7 @@ public class TaskProcessingService {
 
 
 	public void handleLine(String line, List<Employee> employees) {
-		String parts[] = line.split (" ");
+		String parts[] = line.split (",");
 		Integer age = Integer.parseInt(parts[parts.length-1]);
 		String nameArr[] = Arrays.copyOf(parts, parts.length-1);
 		String name = StringUtils.join(nameArr);
