@@ -40,7 +40,8 @@ public class EmployeeService {
 		return employeeRepository.save(employee);
 	}
 	
-	public void deleteEmployee(String name) {
+	public void deleteEmployee(String name) throws BusinessException {
+		this.getEmployee(name);
 		employeeRepository.deleteById(name);
 	}
 	

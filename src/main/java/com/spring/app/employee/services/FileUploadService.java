@@ -23,9 +23,8 @@ public class FileUploadService {
 	@Autowired
 	private TaskProcessingService taskProcessingService;
 
-	public Task store(String action, MultipartFile file) throws BusinessException {
+	public Task store(MultipartFile file) throws BusinessException {
 		this.validateEmptyFile(file);
-		this.validateAction(action);
 		String taskId = UUID.randomUUID().toString();
 		Task task = new Task(taskId, PROCESSING);
 		Task savedTask = taskRepository.save(task);
@@ -33,12 +32,7 @@ public class FileUploadService {
 		return savedTask;
 
 	}
-	
-	private void validateAction(String action) throws BusinessException {
-		if (!action.equalsIgnoreCase("upload")) {
-			throw new BusinessException(INVALID_FILE_UPLOAD_ACTION_STR, INVALID_FILE_UPLOAD_ACTION);
-		}
-	}
+
 	
 	private void validateEmptyFile(MultipartFile file) throws BusinessException {
 		if (file.isEmpty()) {

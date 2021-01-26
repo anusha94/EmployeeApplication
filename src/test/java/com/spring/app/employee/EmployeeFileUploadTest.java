@@ -20,8 +20,8 @@ import com.spring.app.employee.utils.TestUtil;
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class EmployeeFileUploadTest {
-	
-private final String API_URL = "/employees/upload";
+
+	private final String API_URL = "/api/employees/upload";
 
 	
 	@Autowired
@@ -43,7 +43,7 @@ private final String API_URL = "/employees/upload";
 	        "file", 
 	        "test.txt", 
 	        MediaType.TEXT_PLAIN_VALUE, 
-	        "Anusha 26\n Akash 27".getBytes()
+	        "Anusha,26\n Akash,27".getBytes()
 	      );
 
 	    MockMvc mockMvc 

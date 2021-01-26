@@ -18,9 +18,9 @@ import com.spring.app.employee.utils.TestUtil;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class UpdateEmployeeTest {
+public class EmployeeUpdateTest {
 	
-	private final String API_URL = "/employees";
+	private final String API_URL = "/api/employees";
 	
 	@Autowired
 	private TestRestTemplate restTemplate;

@@ -1,8 +1,7 @@
 package com.spring.app.employee;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -14,17 +13,17 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
-
-import com.spring.app.employee.exceptions.BusinessException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.spring.app.employee.pojos.Employee;
 import com.spring.app.employee.pojos.responses.ApiResponse;
 import com.spring.app.employee.utils.TestUtil;
-import static com.spring.app.employee.utils.Constants.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class DeleteOneEmployee {
 
-	private final String API_URL = "/employees/{name}";
+public class EmployeeDeleteTest {
+	
+	private final String API_URL = "/api/employees/{name}";
 	
 	@Autowired
 	private TestRestTemplate restTemplate;
@@ -38,32 +37,26 @@ public class DeleteOneEmployee {
 		ResponseEntity<ApiResponse> responseEntity = this.restTemplate.getForEntity(API_URL, ApiResponse.class, vars);
 		return responseEntity.getBody();
 	}
-	
+
 	@BeforeEach
 	public void setUp() {
 		this.testUtil.deleteAllEmployees();
 		this.testUtil.addEmployees();
 	}
+
 	
 	@Test
 	public void deleteExistingEmployee() {
 		String name = "Anusha";
 		Map<String, String> vars = new HashMap<>();
 		vars.put("name", name);
-		this.restTemplate.delete(API_URL, ApiResponse.class, vars);
 		ApiResponse response = this.getApiResponse(name);
-		assertEquals(EMPLOYEE_NOT_FOUND, response.getErrorCode());
+		ObjectMapper mapper = new ObjectMapper();
+		Employee employee =  mapper.convertValue(response.getResult(), Employee.class);
+		assertNotNull(employee);
+		
+		this.restTemplate.delete(API_URL, ApiResponse.class, vars);
 
 	}
-	
-	@Test
-	public void deleteMissingEmployee() {
-		String name = "Anusha Hegde";
-		Map<String, String> vars = new HashMap<>();
-		vars.put("name", name);
-		this.restTemplate.delete(API_URL, ApiResponse.class, vars);
-		ApiResponse response = this.getApiResponse(name);
-		assertThrows(BusinessException.class, null);
-		assertEquals(EMPLOYEE_NOT_FOUND, response.getErrorCode());
-	}
+
 }

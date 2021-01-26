@@ -1,5 +1,7 @@
 package com.spring.app.employee;
 
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static com.spring.app.employee.utils.Constants.EMPLOYEE_NOT_FOUND;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.HashMap;
@@ -19,13 +21,11 @@ import com.spring.app.employee.pojos.Employee;
 import com.spring.app.employee.pojos.responses.ApiResponse;
 import com.spring.app.employee.utils.TestUtil;
 
-import lombok.extern.slf4j.Slf4j;
-
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class GetOneEmployeeTest {
+public class EmployeeGetOneTest {
 	
-	private final String API_URL = "/employees/{name}";
+	private final String API_URL = "/api/employees/{name}";
 	
 	@Autowired
 	private TestRestTemplate restTemplate;
@@ -47,7 +47,7 @@ public class GetOneEmployeeTest {
 	}
 	
 	@Test
-	public void getOneEmployee() {
+	public void getOneExistingEmployee() {
 		String name = "Anusha";
 		Integer age = 26;
 		ApiResponse response = this.getApiResponse(name);
@@ -56,6 +56,15 @@ public class GetOneEmployeeTest {
 		
 		assertEquals(name, employee.getName());
 		assertEquals(age, employee.getAge());
+	}
+	
+	@Test
+	public void getOneMissingEmployee() {
+		String name = "Anusha Hegde";
+		Integer age = 26;
+		ApiResponse response = this.getApiResponse(name);
+		
+		assertEquals(EMPLOYEE_NOT_FOUND, response.getErrorCode());
 	}
 
 }

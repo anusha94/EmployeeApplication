@@ -7,7 +7,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -21,12 +20,7 @@ import com.spring.app.employee.utils.TestUtil;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class GetAllEmployeesTest {
-	
-	private final String API_URL = "/employees";
-	
-	@Autowired
-	private TestRestTemplate restTemplate;
+public class EmployeesGetAllTest {
 	
 	@Autowired
 	private EmployeeController employeeController;

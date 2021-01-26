@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -29,59 +30,63 @@ import com.spring.app.employee.services.TaskProcessingService;
 import static com.spring.app.employee.utils.Constants.*;
 
 @RestController
+@RequestMapping("/api")
 public class EmployeeController {
 
 	@Autowired
 	private EmployeeService employeeService;
-	
+
 	@Autowired
 	private FileUploadService fileUploadService;
-	
+
 	@Autowired
 	private TaskProcessingService taskProcessingService;
-	
+
 	@GetMapping("/employees")
 	public ResponseEntity<PageResponse<Employee>> getAllEmployees(Pageable pageable) {
 		Page<Employee> employees = employeeService.getAllEmplloyees(pageable);
 		PageResponse<Employee> response = new PageResponse<Employee>(SUCCESS, employees);
 		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
-	
+
 	@GetMapping("/employees/{name}")
 	public ResponseEntity<ApiResponse> getEmployee(@PathVariable String name) throws BusinessException {
 		Employee employee = employeeService.getEmployee(name);
 		ApiResponse response = new ApiResponse(SUCCESS, employee);
 		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
-	
+
 	@PutMapping("/employees/{name}")
-	public ResponseEntity<ApiResponse> updateEmployee(@PathVariable String name, @Valid @RequestBody EmployeeRequest employeeRequest) throws BusinessException {
+	public ResponseEntity<ApiResponse> updateEmployee(@PathVariable String name,
+			@Valid @RequestBody EmployeeRequest employeeRequest) throws BusinessException {
 		Employee emp = employeeService.updateEmployee(name, employeeRequest);
 		ApiResponse response = new ApiResponse(SUCCESS, emp);
 		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
-	
+
 	@PostMapping("/employees")
-	public ResponseEntity<ApiResponse> addEmployee(@Valid @RequestBody EmployeeRequest employeeRequest) throws BusinessException {
+	public ResponseEntity<ApiResponse> addEmployee(@Valid @RequestBody EmployeeRequest employeeRequest)
+			throws BusinessException {
 		Employee emp = employeeService.addEmployee(employeeRequest);
 		ApiResponse response = new ApiResponse(SUCCESS, emp);
 		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
-	
+
 	@DeleteMapping("/employees/{name}")
-	public ResponseEntity<ApiResponse> deleteEmployee(@PathVariable String name) {
+	public ResponseEntity<ApiResponse> deleteEmployee(@PathVariable String name) throws BusinessException {
 		employeeService.deleteEmployee(name);
 		ApiResponse response = new ApiResponse(SUCCESS);
 		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
-	
-	@PostMapping("/employees")
-	public ResponseEntity<ApiResponse> handleFileUpload(@RequestParam("file") MultipartFile file, @RequestParam String action) throws BusinessException, InterruptedException {
-		Task task = fileUploadService.store(action, file);
+
+	@PostMapping("/employees/upload")
+	public ResponseEntity<ApiResponse> handleFileUpload(@RequestParam("file") MultipartFile file)
+			throws BusinessException, InterruptedException {
+		Task task = fileUploadService.store(file);
 		ApiResponse response = new ApiResponse(SUCCESS, task);
 		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
-	
+
 	@GetMapping("/tasks/{id}")
 	public ResponseEntity<ApiResponse> getTaskStatus(@PathVariable String id) throws BusinessException {
 		Task task = taskProcessingService.getTaskStatus(id);
