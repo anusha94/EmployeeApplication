@@ -14,28 +14,33 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import com.spring.app.employee.pojos.responses.ApiResponse;
+
+import lombok.extern.slf4j.Slf4j;
+
 import static com.spring.app.employee.utils.Constants.*;
 
 @ControllerAdvice
+@Slf4j
 public class EmployeeExceptionController extends ResponseEntityExceptionHandler{
-	private static final Logger logger = LoggerFactory.getLogger(EmployeeExceptionController.class);
 	
-	@ExceptionHandler(value={BusinessException.class})
+	@ExceptionHandler(BusinessException.class)
 	public ResponseEntity<Object> handleBusinessException(BusinessException ex) {
-		logger.error("Handle Business Exception - ", ex.getMessage());
-		return new ResponseEntity<Object>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+		ex.printStackTrace();
+		log.error("Handle Business Exception - ", ex.getMessage());
+		ApiResponse response = new ApiResponse(FAILURE, ex.getCode(), ex.getMessage());
+		return new ResponseEntity<Object>(response, HttpStatus.BAD_REQUEST);
 	}
 	
 	@Override
 	protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException e, HttpHeaders headers, HttpStatus status, WebRequest request) {
-		logger.error("Handle HTTP message not readable exception - " + e.getMessage(), e);
+		log.error("Handle HTTP message not readable exception - " + e.getMessage(), e);
 		ApiResponse response = new ApiResponse(FAILURE, INVALID_JSON, INVALID_JSON_STR);
 		return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
 	}
 	
 	@Override
 	public final ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException e, HttpHeaders headers, HttpStatus status, WebRequest request) {
-		logger.error("Handle method argument not valid exception - ", e.getMessage(), e);
+		log.error("Handle method argument not valid exception - ", e.getMessage(), e);
 		ApiResponse response = new ApiResponse(FAILURE, INVALID_JSON, INVALID_JSON_STR);
 		return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
 	}

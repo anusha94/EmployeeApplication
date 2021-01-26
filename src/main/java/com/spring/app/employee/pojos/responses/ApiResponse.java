@@ -1,10 +1,14 @@
 package com.spring.app.employee.pojos.responses;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class ApiResponse extends BaseResponse{
 	private Object result;
 	

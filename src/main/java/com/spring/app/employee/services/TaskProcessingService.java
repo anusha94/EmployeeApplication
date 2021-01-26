@@ -40,20 +40,14 @@ public class TaskProcessingService {
 			InputStream inputStream = file.getInputStream();
 			new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8)).lines()
 					.forEach((String line) -> {
-						try {
-							this.handleLine(line, employees);
-						} catch (InterruptedException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
+						this.handleLine(line, employees);
 					});
 			employeeRepository.saveAll(employees);
 			this.updateTask(task, COMPLETED);
-		} catch (
-
-		Exception e) {
+		} catch (Exception e) {
 			log.error(e.getMessage());
-			throw new BusinessException("Failed to store file ", 400);
+			this.updateTask(task, FAILURE);
+			throw new BusinessException(FILE_PROCESSING_ERROR_STR, FILE_PROCESSING_ERROR);
 		}
 	}
 	
@@ -63,9 +57,7 @@ public class TaskProcessingService {
 	}
 
 
-	public void handleLine(String line, List<Employee> employees) throws InterruptedException {
-		Thread.sleep(5000);
-		log.info(line);
+	public void handleLine(String line, List<Employee> employees) {
 		String parts[] = line.split (" ");
 		Integer age = Integer.parseInt(parts[parts.length-1]);
 		String nameArr[] = Arrays.copyOf(parts, parts.length-1);
@@ -76,7 +68,7 @@ public class TaskProcessingService {
 	
 	public Task getTaskStatus(String id) throws BusinessException {
 		Task task = taskRepository.findById(id)
-				.orElseThrow((() -> new BusinessException("Employee not found", 400)));
+				.orElseThrow((() -> new BusinessException(TASK_NOT_FOUND_STR, TASK_NOT_FOUND)));
 		return task;
 	}
 }

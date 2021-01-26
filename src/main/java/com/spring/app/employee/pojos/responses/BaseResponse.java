@@ -12,7 +12,6 @@ import lombok.ToString;
 @ToString
 @NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@SuppressWarnings("unused")
 public class BaseResponse {
 
 	private String status;
