@@ -1,10 +1,12 @@
-package com.spring.app.employee;
+package com.spring.app.employee.controller;
 
 import java.util.List;
 
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -21,20 +23,17 @@ import com.spring.app.employee.pojos.Employee;
 import com.spring.app.employee.pojos.Task;
 import com.spring.app.employee.pojos.requests.EmployeeRequest;
 import com.spring.app.employee.pojos.responses.ApiResponse;
-import com.spring.app.employee.services.EmployeeServiceImpl;
+import com.spring.app.employee.services.EmployeeService;
 import com.spring.app.employee.services.FileStorageService;
 import com.spring.app.employee.services.TaskProcessingService;
-
-import lombok.extern.slf4j.Slf4j;
 
 import static com.spring.app.employee.utils.Constants.*;
 
 @RestController
-@Slf4j
 public class EmployeeController {
 
 	@Autowired
-	private EmployeeServiceImpl employeeServiceImpl;
+	private EmployeeService employeeService;
 	
 	@Autowired
 	private FileStorageService fileStorageService;
@@ -43,40 +42,36 @@ public class EmployeeController {
 	private TaskProcessingService taskProcessingService;
 	
 	@GetMapping("/employees")
-	public ResponseEntity<ApiResponse> getAllEmployees() {
-		log.info("get all employees");
-		List<Employee> employees = employeeServiceImpl.getAllEmplloyees();
+	public ResponseEntity<ApiResponse> getAllEmployees(Pageable pageable) {
+		Page<Employee> employees = employeeService.getAllEmplloyees(pageable);
 		ApiResponse response = new ApiResponse(SUCCESS, employees);
-		log.info(response.toString());
 		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
 	
 	@GetMapping("/employees/{name}")
 	public ResponseEntity<ApiResponse> getEmployee(@PathVariable String name) throws BusinessException {
-		log.info(name);
-		Employee employee = employeeServiceImpl.getEmployee(name);
+		Employee employee = employeeService.getEmployee(name);
 		ApiResponse response = new ApiResponse(SUCCESS, employee);
-		log.info(response.getResult().toString());
 		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
 	
 	@PutMapping("/employees/{name}")
 	public ResponseEntity<ApiResponse> updateEmployee(@PathVariable String name, @Valid @RequestBody EmployeeRequest employeeRequest) throws BusinessException {
-		Employee employee = employeeServiceImpl.updateEmployee(name, employeeRequest);
-		ApiResponse response = new ApiResponse(SUCCESS, employee);
+		Employee emp = employeeService.updateEmployee(name, employeeRequest);
+		ApiResponse response = new ApiResponse(SUCCESS, emp);
 		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
 	
 	@PostMapping("/employees")
 	public ResponseEntity<ApiResponse> addEmployee(@Valid @RequestBody EmployeeRequest employeeRequest) throws BusinessException {
-		Employee emp = employeeServiceImpl.addEmployee(employeeRequest);
+		Employee emp = employeeService.addEmployee(employeeRequest);
 		ApiResponse response = new ApiResponse(SUCCESS, emp);
 		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
 	
 	@DeleteMapping("/employees/{name}")
 	public ResponseEntity<ApiResponse> deleteEmployee(@PathVariable String name) {
-		employeeServiceImpl.deleteEmployee(name);
+		employeeService.deleteEmployee(name);
 		ApiResponse response = new ApiResponse(SUCCESS);
 		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
