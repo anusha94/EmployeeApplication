@@ -36,16 +36,8 @@ public class EmployeeService {
 	
 	public Employee addEmployee(EmployeeRequest employeeRequest) throws BusinessException {
 		this.validateAge(employeeRequest.getAge());
-		try {
-			this.getEmployee(employeeRequest.getName());
-		}
-		catch (BusinessException e) {
-			if (EMPLOYEE_NOT_FOUND == e.getCode()) {
-				Employee employee = new Employee(employeeRequest.getName(), employeeRequest.getAge());
-				return employeeRepository.save(employee);
-			}
-		}
-		return null;
+		Employee employee = new Employee(employeeRequest.getName(), employeeRequest.getAge());
+		return employeeRepository.save(employee);
 	}
 	
 	public void deleteEmployee(String name) throws BusinessException {
