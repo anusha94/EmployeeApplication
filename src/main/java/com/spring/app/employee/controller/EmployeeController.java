@@ -56,10 +56,9 @@ public class EmployeeController {
 		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
 
-	@PutMapping("/employees/{name}")
-	public ResponseEntity<ApiResponse> updateEmployee(@PathVariable String name,
-			@Valid @RequestBody EmployeeRequest employeeRequest) throws BusinessException {
-		Employee emp = employeeService.updateEmployee(name, employeeRequest);
+	@PutMapping("/employees")
+	public ResponseEntity<ApiResponse> updateEmployee(@Valid @RequestBody EmployeeRequest employeeRequest) throws BusinessException {
+		Employee emp = employeeService.updateEmployee(employeeRequest);
 		ApiResponse response = new ApiResponse(SUCCESS, emp);
 		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}

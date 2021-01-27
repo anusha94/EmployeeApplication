@@ -1,11 +1,24 @@
-# Employee Spring Boot App
 
+##  How to run the application
 
+### Prerequisites
+* JDK 1.8 or later
+* Maven 3.2.4
 
-##  How to run application
+### Starting the application
+```
+git clone git@github.com:anusha94/EmployeeApplication.git
+cd EmployeeApplication
+./mvnw spring-boot:run
+```
 
+### Testing the application
+```
+./mvnw test
+```
 ## Assumptions
 * I have used Apache Derby for the database. Apache Derby is an open source database written in Java. When you start the Spring Boot application, it runs in an embedded mode within the JVM of the application. It is an in-memory database, that is, it creates necessary tables at startup and destroys tables and shuts down Derby once the application exits
+* If the file uploaded contains duplicate name, it overrides the existing employee details
 
 
 ## Endpoint Details
@@ -86,4 +99,4 @@ Returns the status of the given `{id}`
 Returns `TASK_NOT_FOUND` for an invalid task id
 
 ## Postman Collection
-To refer to all endpoints with sample payload content, refer to this postman collection
+To refer to all endpoints with sample payload content, refer to this [postman collection](https://www.getpostman.com/collections/7eec8e211d110e9809e1)

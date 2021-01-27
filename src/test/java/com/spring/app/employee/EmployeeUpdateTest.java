@@ -11,6 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.spring.app.employee.controller.EmployeeController;
+import com.spring.app.employee.exceptions.BusinessException;
 import com.spring.app.employee.pojos.Employee;
 import com.spring.app.employee.pojos.requests.EmployeeRequest;
 import com.spring.app.employee.pojos.responses.ApiResponse;
@@ -20,16 +22,14 @@ import com.spring.app.employee.utils.TestUtil;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class EmployeeUpdateTest {
 	
-	private final String API_URL = "/api/employees";
-	
-	@Autowired
-	private TestRestTemplate restTemplate;
-	
 	@Autowired
 	private TestUtil testUtil;
 	
-	private ApiResponse getApiResponse(EmployeeRequest request) {
-		ResponseEntity<ApiResponse> responseEntity = this.restTemplate.postForEntity(API_URL, request, ApiResponse.class);
+	@Autowired
+	private EmployeeController employeeController;
+	
+	private ApiResponse getApiResponse(EmployeeRequest request) throws BusinessException {
+		ResponseEntity<ApiResponse> responseEntity = this.employeeController.updateEmployee(request);
 		return responseEntity.getBody();
 	}
 	
@@ -40,7 +40,7 @@ public class EmployeeUpdateTest {
 	}
 	
 	@Test
-	public void updateExistingEmployee() {
+	public void updateExistingEmployee() throws BusinessException {
 		String name = "Anusha";
 		Integer age = 30;
 		EmployeeRequest request = new EmployeeRequest();
@@ -53,15 +53,5 @@ public class EmployeeUpdateTest {
 		assertEquals(name, employee.getName());
 		assertEquals(age, employee.getAge());
 	}
-	
-	@Test
-	public void updateMissingEmployee() {
-		String name = "Anusha Hegde";
-		Integer age = 30;
-		EmployeeRequest request = new EmployeeRequest();
-		request.setName(name);
-		request.setAge(age);
-//		Assert.Throws<BusinessException>(() => user.MakeUserActive());
-//		Assert.Throws<BusinessException>(() => this.getApiResponse(request));
-	}
+
 }

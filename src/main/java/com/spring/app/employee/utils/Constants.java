@@ -13,6 +13,7 @@ public class Constants {
 	public static final Integer INVALID_AGE_RANGE = 2003;
 	public static final Integer FILE_PROCESSING_ERROR = 2004;
 	public static final Integer FILE_EMPTY_ERROR = 2005;
+	public static final Integer EMPLOYEE_ALREADY_EXISTS = 2006;
 	
 	// Status string messages
 	public static final String INVALID_JSON_STR = "invalid json";
@@ -21,6 +22,7 @@ public class Constants {
 	public static final String INVALID_AGE_RANGE_STR = "invalid age";
 	public static final String FILE_PROCESSING_ERROR_STR = "error when processing the file";
 	public static final String FILE_EMPTY_ERROR_STR = "uploaded file cannot be empty";
+	public static final String EMPLOYEE_ALREADY_EXISTS_STR = "employee already exists";
 	
 	// Task constants
 	public static final String PROCESSING = "processing";

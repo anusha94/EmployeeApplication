@@ -29,13 +29,16 @@ public class EmployeeService {
 		return employee;
 	}
 	
-	public Employee updateEmployee(String name, EmployeeRequest employeeRequest) throws BusinessException {
-		Employee employee = this.getEmployee(name);
-		return employeeRepository.save(employee);
+	public Employee updateEmployee(EmployeeRequest employeeRequest) throws BusinessException {
+		this.getEmployee(employeeRequest.getName());
+		Employee updatedEmployee = new Employee(employeeRequest.getName(), employeeRequest.getAge());
+		return employeeRepository.save(updatedEmployee);
 	}
 	
 	public Employee addEmployee(EmployeeRequest employeeRequest) throws BusinessException {
 		this.validateAge(employeeRequest.getAge());
+		this.validateIfEmployeeAlreadyExists(employeeRequest.getName());
+		
 		Employee employee = new Employee(employeeRequest.getName(), employeeRequest.getAge());
 		return employeeRepository.save(employee);
 	}
@@ -49,6 +52,15 @@ public class EmployeeService {
 		if(age < 0) {
 			throw new BusinessException(INVALID_AGE_RANGE_STR, INVALID_AGE_RANGE);
 		}
+	}
+	
+	private void validateIfEmployeeAlreadyExists(String name) throws BusinessException {
+		Boolean employeeExists = employeeRepository.findById(name)
+				.isPresent();
+		if(employeeExists) {
+			throw new BusinessException(EMPLOYEE_ALREADY_EXISTS_STR, EMPLOYEE_ALREADY_EXISTS);
+		}
+		
 	}
 
 }
